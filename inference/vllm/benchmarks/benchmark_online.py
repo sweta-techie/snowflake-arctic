@@ -161,7 +161,7 @@ def benchmark_vllm(
                 yield output, time_now - time_last_token
                 time_last_token = time_now
 
-    response = requests.post(api_url, json=pload, stream=True)
+    response = requests.post(api_url, json=pload, stream=True, timeout=60)
     token_gen_time = []
     last_response = ""
     for h, t in get_streaming_response(response, query.start_time):
@@ -264,7 +264,7 @@ def run_benchmarks(
             # Model should be loaded within timeout_secs, abort if not the case.
             while time.time() - proc_start_time < timeout_secs:
                 try:
-                    if requests.head("http://localhost:8000/generate") is not None:
+                    if requests.head("http://localhost:8000/generate", timeout=60) is not None:
                         ready = True
                         break
                 except:
