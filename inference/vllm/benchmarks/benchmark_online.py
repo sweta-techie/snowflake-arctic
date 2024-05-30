@@ -5,7 +5,6 @@ import json
 import multiprocessing
 import os
 import queue
-import random
 import requests
 import subprocess
 from transformers import AutoTokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast
@@ -15,6 +14,7 @@ from typing import Iterable, List, Tuple
 from benchmark_tools import OnlineBenchmark, Query, summarize_online_benchmarks
 
 from prompt_generator import PromptsGenerator
+import secrets
 
 
 MAX_SEQUENCE_LENGTH = 4096
@@ -221,7 +221,7 @@ def _run_parallel(
 
     barrier.wait()
 
-    time.sleep(random.uniform(0, client_num) * 0.01)
+    time.sleep(secrets.SystemRandom().uniform(0, client_num) * 0.01)
     while True:
         try:
             query = query_queue.get(timeout=300)
